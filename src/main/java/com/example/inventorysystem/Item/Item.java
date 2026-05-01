@@ -1,5 +1,7 @@
-package com.example.inventorysystem;
+package com.example.inventorysystem.Item;
 
+import com.example.inventorysystem.Location.Location;
+import com.example.inventorysystem.Tag.Tag;
 import jakarta.persistence.*;
 import org.hibernate.validator.constraints.URL;
 import org.jspecify.annotations.NonNull;
@@ -27,8 +29,6 @@ public class Item {
     private Set<Tag> tags;
 
     @Column
-    @NonNull
-    @URL
     private String imageUrl;
 
     @Column

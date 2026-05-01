@@ -1,4 +1,4 @@
-package com.example.inventorysystem;
+package com.example.inventorysystem.Tag;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

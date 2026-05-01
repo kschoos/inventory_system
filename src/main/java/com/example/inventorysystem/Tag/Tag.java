@@ -1,11 +1,11 @@
-package com.example.inventorysystem;
+package com.example.inventorysystem.Tag;
 
 import jakarta.persistence.*;
 import org.jspecify.annotations.NonNull;
 
 @Entity
-@Table(name="locations")
-public class Location {
+@Table(name="tags")
+public class Tag {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -14,15 +14,15 @@ public class Location {
     @NonNull
     private String name;
 
+    public Long getId() {
+        return id;
+    }
+
     public @NonNull String getName() {
         return name;
     }
 
     public void setName(@NonNull String name) {
         this.name = name;
-    }
-
-    public Long getId() {
-        return id;
     }
 }
