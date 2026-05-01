@@ -41,29 +41,42 @@ public class ItemService {
         return itemRepository.save(item);
     }
 
+    public static Specification<Item> hasLocation(Long locationId) {
+        return (root, query, cb) -> {
+            if (locationId == null) {
+                return cb.conjunction();
+            }
+
+            return cb.equal(root.get("location").get("id"), locationId);
+        };
+    }
+
+    public static Specification<Item> hasTags(List<Long> tagIds) {
+        return (root, query, cb) -> {
+            query.distinct(true);
+            if (tagIds == null) {
+                return cb.conjunction();
+            }
+
+            return root.join("tags").get("id").in(tagIds);
+        };
+    }
+
+    public static Specification<Item> hasName(String name) {
+        return (root, query, cb) -> {
+            if (name == null) {
+                return cb.conjunction();
+            }
+
+            return cb.like(cb.lower(root.get("name")), "%" + name.toLowerCase() + "%");
+        };
+    }
+
     public List<Item> findItems(Long locationId, List<Long> tagIds, String name) {
-        Specification<Item> spec = null;
+        Specification<Item> spec = Specification.where(hasLocation(locationId))
+                .and(hasTags(tagIds))
+                .and(hasName(name));
 
-        if (locationId != null) {
-            spec = spec.and((root, query, cb) ->
-                    cb.equal(root.get("location").get("id"), locationId));
-        }
-
-        if (tagIds != null && !tagIds.isEmpty()) {
-            spec = spec.and((root, query, cb) -> {
-                query.distinct(true);
-                return root.join("tags").get("id").in(tagIds);
-            });
-        }
-
-        if (name != null && !name.isBlank()) {
-            spec = spec.and((root, query, cb) -> {
-                return cb.like(cb.lower(root.get("name")), "%" + name.toLowerCase() + "%");
-            });
-        }
-
-        boolean filterApplied = locationId == null && tagIds == null && name == null;
-
-        return !filterApplied ? itemRepository.findAll() : itemRepository.findAll(spec);
+        return itemRepository.findAll(spec);
     }
 }
