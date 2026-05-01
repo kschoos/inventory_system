@@ -1,4 +1,4 @@
-package com.example.inventorysystem.Tag;
+package com.example.inventorysystem.Exceptions;
 
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 

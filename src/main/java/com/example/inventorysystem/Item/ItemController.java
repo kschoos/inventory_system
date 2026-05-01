@@ -22,15 +22,10 @@ import java.util.List;
 @RequestMapping("/item")
 public class ItemController {
     private final ItemRepository items;
-    private final TagRepository tags;
-    private final LocationRepository locations;
-
     private final ItemService itemService;
 
-    public ItemController(ItemRepository items, TagRepository tags, LocationRepository locations, ItemService itemService) {
+    public ItemController(ItemRepository items, ItemService itemService) {
         this.items = items;
-        this.tags = tags;
-        this.locations = locations;
         this.itemService = itemService;
     }
 
@@ -48,16 +43,6 @@ public class ItemController {
             @RequestParam(required = false) String name) {
 
         List<Item> found_items = itemService.findItems(location_id, tag_ids, name);
-//
-//        if (location_id != null && tag_ids != null) {
-//            found_items = items.findDinstinctByLocationIdAndTagsIdIn(location_id, tag_ids);
-//        } else if (location_id != null) {
-//            found_items = items.findByLocationId(location_id);
-//        } else if (tag_ids != null){
-//            found_items = items.findDistinctByTagsIdIn(tag_ids);
-//        } else {
-//            found_items = items.findAll();
-//        }
 
         return ResponseEntity.ok(found_items);
     }
@@ -65,9 +50,6 @@ public class ItemController {
     @GetMapping("/{item_id}")
     @ResponseBody
     public ResponseEntity<?> getSpecificItem(@PathVariable Integer item_id) {
-//        int pageSize = 5;
-//        Pageable pageable = PageRequest.of(page - 1, pageSize);
-//        Page<Item> itemResults = items.findAll(pageable);
         Item item = items.findById(item_id)
                 .orElseThrow(() -> new ResourceNotFoundException("Item not found"));
 
