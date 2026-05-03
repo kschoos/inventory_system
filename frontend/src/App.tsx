@@ -10,7 +10,7 @@ function App() {
   useEffect(() => {
     fetch("http://localhost:8080/item")
     .then(res => res.json())
-    .then(setItems);
+    .then((i) => {console.log(i); setItems(i)});
   }, []);
 
   function searchName(name) {
