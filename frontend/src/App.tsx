@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import ItemTable from "./components/ItemTable";
+import Searchbar from "./components/Searchbar";
 
 import './App.css'
 
@@ -12,11 +13,20 @@ function App() {
     .then(setItems);
   }, []);
 
+  function searchName(name) {
+    fetch("http://localhost:8080/item?name=" + name)
+    .then(res => res.json())
+    .then(setItems);
+  }
+
   return (
     <div className="container">
       <div className="row">
+        <Searchbar searchName={searchName}/>
+      </div>
+      <div className="row">
         <div className="col-3"></div>
-        <div className="col-6">
+        <div className="col-6">'
         <ItemTable items={items}/>
         </div>
         <div className="col-3"></div>
