@@ -1,6 +1,7 @@
 package com.example.inventorysystem.Tag;
 
 import com.example.inventorysystem.Exceptions.ResourceNotFoundException;
+import com.example.inventorysystem.SanitizationUtil;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -31,6 +32,9 @@ public class TagController {
     @PostMapping
     public ResponseEntity<?> newTag(Tag tag) {
         Tag savedTag = null;
+
+        tag.setName(SanitizationUtil.sanitize(tag.getName()));
+
         try {
             savedTag = this.tags.save(tag);
         } catch (DataIntegrityViolationException e) {

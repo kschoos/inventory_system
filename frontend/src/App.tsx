@@ -1,37 +1,25 @@
 import { useState, useEffect } from 'react'
+import { Routes, Route } from "react-router-dom";
+import HomePage from "./pages/HomePage";
+import ItemPage from "./pages/ItemPage";
+
 import ItemTable from "./components/ItemTable";
 import Searchbar from "./components/Searchbar";
+import TagList from "./components/TagList";
+import  Select from 'react-select'
+import  CreatableSelect from 'react-select/creatable'
 
 import './App.css'
 
 function App() {
-  const [items, setItems] = useState([])
-
   useEffect(() => {
-    fetch("http://localhost:8080/item")
-    .then(res => res.json())
-    .then((i) => {console.log(i); setItems(i)});
-  }, []);
-
-  function searchName(name) {
-    fetch("http://localhost:8080/item?name=" + name)
-    .then(res => res.json())
-    .then(setItems);
-  }
+  }, [])
 
   return (
-    <div className="container">
-      <div className="row">
-        <Searchbar searchName={searchName}/>
-      </div>
-      <div className="row">
-        <div className="col-3"></div>
-        <div className="col-6">'
-        <ItemTable items={items}/>
-        </div>
-        <div className="col-3"></div>
-      </div>
-    </div>
+    <Routes>
+      <Route path="/" element={<HomePage/>}/>
+      <Route path="/items/:id" element={<ItemPage/>}/>
+    </Routes>
   );
 }
 

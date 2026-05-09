@@ -18,4 +18,11 @@ public interface ItemRepository extends JpaRepository<Item, Integer>, JpaSpecifi
     List<Item> findDistinctByTagsIdIn(List<Long> tagIds);
     List<Item> findDinstinctByLocationIdAndTagsIdIn(Long locationId, List<Long> tagIds);
     List<Item> findByNameContaining(String name);
+
+    @Query("SELECT i FROM Item i JOIN i.tags t WHERE i.location.id = :locationId AND t.id IN :tagIds GROUP BY i HAVING COUNT(DISTINCT t.id) = :tagCount")
+    List<Item> findByLocationAndAllTags(
+            @Param("locationId") Long locationId,
+            @Param("tagIds") List<Long> tagIds,
+            @Param("tagCount") long tagCount
+    );
 }

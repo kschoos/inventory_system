@@ -2,8 +2,11 @@ package com.example.inventorysystem.Item;
 
 import com.example.inventorysystem.Location.Location;
 import com.example.inventorysystem.Location.LocationRepository;
+import com.example.inventorysystem.SanitizationUtil;
 import com.example.inventorysystem.Tag.Tag;
 import com.example.inventorysystem.Tag.TagRepository;
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -25,18 +28,31 @@ public class ItemService {
         this.tagRepository = tagRepository;
     }
 
-    public Item create(ItemCreate itemCreate) {
+    public void populateItem(Item item, ItemCreate itemCreate) {
         Location location = locationRepository.findById(itemCreate.getLocationId())
                 .orElseThrow(() -> new RuntimeException("Location not found"));
 
         Set<Tag> tags = new HashSet<>(tagRepository.findAllById(itemCreate.getTagIds()));
 
-        Item item = new Item();
-        item.setName(itemCreate.getName());
-        item.setImageUrl(itemCreate.getImageUrl());
+        item.setName(SanitizationUtil.sanitize(itemCreate.getName()));
+        item.setImageUrl(SanitizationUtil.sanitize(itemCreate.getImageUrl()));
         item.setCount(itemCreate.getCount());
         item.setTags(tags);
         item.setLocation(location);
+    }
+
+    public Item create(ItemCreate itemCreate) {
+        Item item = new Item();
+        populateItem(item, itemCreate);
+
+        return itemRepository.save(item);
+    }
+
+    public Item update(ItemCreate itemCreate) {
+        Item item = itemRepository.findById(itemCreate.getId())
+                .orElseThrow(() -> new RuntimeException("Item not found"));
+
+        populateItem(item, itemCreate);
 
         return itemRepository.save(item);
     }
@@ -58,7 +74,14 @@ public class ItemService {
                 return cb.conjunction();
             }
 
-            return root.join("tags").get("id").in(tagIds);
+            Join<Item, Tag> tagJoin = root.join("tags");
+
+            Predicate tagsInPredicate = tagJoin.get("id").in(tagIds);
+
+            query.groupBy(root.get("id"));
+            query.having(cb.equal(cb.countDistinct(tagJoin.get("id")), tagIds.size()));
+
+            return tagsInPredicate;
         };
     }
 

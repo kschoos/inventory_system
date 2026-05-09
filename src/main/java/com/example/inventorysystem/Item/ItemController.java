@@ -35,6 +35,12 @@ public class ItemController {
         return ResponseEntity.status(201).body(saved_item);
     }
 
+    @PutMapping
+    public ResponseEntity<?> putItem(@Valid @RequestBody ItemCreate itemCreate) {
+        var saved_item = itemService.update(itemCreate);
+        return ResponseEntity.status(200).body(saved_item);
+    }
+
     @GetMapping
     @ResponseBody
     public ResponseEntity<?> getItems(

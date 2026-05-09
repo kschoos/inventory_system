@@ -14,6 +14,8 @@ import java.util.Set;
 @Getter
 @Setter
 public class ItemCreate {
+    private Integer id;
+
     @NotNull
     private String name;
 
