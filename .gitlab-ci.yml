@@ -17,11 +17,15 @@ build:
 
 deploy:
   stage: deploy
-  image: openjdk:26-ea
+  before_script:
+    - apk add --no-cache openssh-client
+    - mkdir -p ~/.ssh
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_rsa
+    - chmod 600 ~/.ssh/id_rsa
+    - ssh-keyscan $DEPLOY_HOST >> ~/.ssh/known_hosts
   script:
-    - mkdir -p /opt/inventory_system
-    - cp build/libs/*.jar /opt/inventory_system
-    - pkill -f 'java -jar /opt/inventory_system/*.jar' || true
-    - nohup java -jar /opt/inventory_system/*.jar > /opt/inventory_system/app.log 2>&1 &
+    - scp build/libs/*.jar $DEPLOY_USER@$DEPLOY_HOST:/opt/inventory_system/
+    - ssh $DEPLOY_USER@$DEPLOY_HOST "pkill -f 'java -jar /opt/inventory_system/*.jar' || true"
+    - ssh $DEPLOY_USER@$DEPLOY_HOST "nohup java -jar /opt/inventory_system/*.jar > /opt/inventory_system/app.log 2>&1 &"
   only:
     - main
