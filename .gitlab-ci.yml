@@ -6,7 +6,7 @@ variables:
 
 build:
   stage: build
-  image: gradle:9.4.1-jdk-26
+  image: gradle:9.4.1-jdk26
   script:
     - gradle clean build
   artifacts:
