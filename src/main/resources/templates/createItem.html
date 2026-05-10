@@ -1,0 +1,46 @@
+<form th:action="@{/items/new}" th:object="${item}" method="post" xmlns:th="http://www.w3.org/1999/html">
+    <!-- Name -->
+    <div>
+        <label>Name:</label>
+        <input type="text" th:field="*{name}" />
+    </div>
+
+    <!-- Image URL -->
+    <div>
+        <label>Image URL:</label>
+        <input type="text" th:field="*{imageUrl}" />
+    </div>
+
+    <!-- Count -->
+    <div>
+        <label>Count:</label>
+        <input type="number" th:field="*{count}" />
+    </div>
+
+    <!-- Location (ManyToOne) -->
+    <div>
+        <label>Location:</label>
+        <select th:field="*{location}">
+            <option th:each="loc : ${locations}"
+                    th:value="${loc.id}"
+                    th:text="${loc.name}">
+            </option>
+        </select>
+    </div>
+
+    <!-- Tags (ManyToMany) -->
+    <div>
+        <label>Tags:</label>
+        <select multiple th:field="*{tags}">
+            <option th:each="tag : ${tags}"
+                    th:value="${tag.id}"
+                    th:text="${tag.name}">
+            </option>
+        </select>
+    </div>
+
+    <button type="submit">Create Item</button>
+
+    <div th:text="${error}">Error</div>
+
+</form>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Items Table</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: left;
+        }
+        img {
+            max-width: 80px;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Items</h2>
+
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Location</th>
+        <th>Tags</th>
+        <th>Image</th>
+        <th>Count</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="item : ${listItems}">
+        <td th:text="${item.id}"></td>
+        <td th:text="${item.name}"></td>
+        <td th:text="${item.location.name}"></td>
+
+        <!-- Tags as comma-separated -->
+        <td>
+                <span th:each="tag, iterStat : ${item.tags}">
+                    <span th:text="${tag.name}"></span>
+                    <span th:if="${!iterStat.last}">, </span>
+                </span>
+        </td>
+
+        <!-- Image -->
+        <td>
+            <img th:src="${item.imageUrl}" alt="image"/>
+        </td>
+
+        <td th:text="${item.count}"></td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>
