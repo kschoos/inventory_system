@@ -25,8 +25,8 @@ deploy:
     - chmod 600 ~/.ssh/id_rsa
     - ssh-keyscan $DEPLOY_HOST >> ~/.ssh/known_hosts
   script:
-    - scp build/libs/*.jar $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH
-    - ssh $DEPLOY_USER@$DEPLOY_HOST "pkill -f 'java -jar $DEPLOY_PATH*.jar' || true"
-    - ssh $DEPLOY_USER@$DEPLOY_HOST "nohup java -jar '$DEPLOY_PATH/*.jar' > '$DEPLOY_PATH/app.log' 2>&1 & disown"
+    - scp build/libs/*-SNAPSHOT.jar $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATHInventorySystem.jar
+    - ssh $DEPLOY_USER@$DEPLOY_HOST "pkill -f 'java -jar $DEPLOY_PATHInventorySystem.jar' || true"
+    - ssh $DEPLOY_USER@$DEPLOY_HOST "nohup java -jar '$DEPLOY_PATH/InventorySystem.jar' > '$DEPLOY_PATH/app.log' 2>&1 & disown"
   only:
     - main
