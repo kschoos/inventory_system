@@ -17,7 +17,7 @@ build:
 
 deploy:
   stage: deploy
-  image: openjdk:26
+  image: openjdk:26-ea
   script:
     - mkdir -p /opt/inventory_system
     - cp build/libs/*.jar /opt/inventory_system
