@@ -23,10 +23,12 @@ import java.util.List;
 public class ItemController {
     private final ItemRepository items;
     private final ItemService itemService;
+    private final ItemJdbcRepository itemJdbcRepository;
 
-    public ItemController(ItemRepository items, ItemService itemService) {
+    public ItemController(ItemRepository items, ItemService itemService, ItemJdbcRepository itemJdbcRepository) {
         this.items = items;
         this.itemService = itemService;
+        this.itemJdbcRepository = itemJdbcRepository;
     }
 
     @PostMapping
@@ -48,7 +50,8 @@ public class ItemController {
             @RequestParam(required = false) List<Long> tag_ids,
             @RequestParam(required = false) String name) {
 
-        List<Item> found_items = itemService.findItems(location_id, tag_ids, name);
+        // List<Item> found_items = itemService.findItems(location_id, tag_ids, name);
+        List<Item> found_items = itemJdbcRepository.findAll();
 
         return ResponseEntity.ok(found_items);
     }
