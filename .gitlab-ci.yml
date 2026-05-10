@@ -1,5 +1,6 @@
 stages:
   - build
+  - deploy
 
 variables:
   GRADLE_USER_HOME: "$CI_PROJECT_DIR/.gradle"
@@ -13,3 +14,15 @@ build:
       paths:
         - build/libs/
       expire_in: 1 week
+
+
+  deploy:
+    stage: deploy
+    image: openjdk:26
+    script:
+      - mkdir -p /opt/inventory_system
+      - cp build/libs/*.jar /opt/inventory_system
+      - pkill -f 'java -jar /opt/inventory_system/*.jar' || true
+      - nohup java -jar /opt/inventory_system/*.jar > /opt/inventory_system/app.log 2>&1 &
+    only:
+      - main
