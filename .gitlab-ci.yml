@@ -25,7 +25,8 @@ deploy:
     - chmod 600 ~/.ssh/id_rsa
     - ssh-keyscan $DEPLOY_HOST >> ~/.ssh/known_hosts
   script:
-    - scp build/libs/*-SNAPSHOT.jar $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATHInventorySystem.jar
+    - mv build/libs/*-SNAPSHOT.jar build/libs/InventorySystem.jar
+    - scp build/libs/InventorySystem.jar $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH
     - ssh $DEPLOY_USER@$DEPLOY_HOST "nohup java -jar '$DEPLOY_PATH/InventorySystem.jar' > '$DEPLOY_PATH/app.log' 2>&1 & disown"
   only:
     - main
