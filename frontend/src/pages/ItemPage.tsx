@@ -16,32 +16,32 @@ function ItemPage () {
     const [tags, setTags] = useState<Tag[]>([]);
 
     function fetchLocations() {
-        fetch("http://localhost:8080/location")
+        fetch("/location")
         .then(res => res.json())
         .then((i) => {console.log(i); setLocations(i)});
     }
 
     function fetchTags() {
-        fetch("http://localhost:8080/tag")
+        fetch("/tag")
         .then(res => res.json())
         .then((i) => {console.log(i); setTags(i)});
     }  
 
     function fetchItem() {
-        fetch(`http://localhost:8080/item/${item?.id}`)
+        fetch(`/item/${item?.id}`)
         .then(res => res.json())
         .then(setItem);
     }
     
     function createOptionTags(createdOption: String) {
-        fetch("http://localhost:8080/tag?name="+createdOption, {
+        fetch("/tag?name="+createdOption, {
           method: "POST",
         })
         .then(fetchTags);
     }
 
     function createOptionLocations(createdOption: String) {
-        fetch("http://localhost:8080/location?name="+createdOption, {
+        fetch("/location?name="+createdOption, {
           method: "POST",
         })
         .then(fetchLocations);
@@ -110,7 +110,7 @@ function ItemPage () {
         }
 
 
-        fetch("http://localhost:8080/item", {
+        fetch("/item", {
             method: "PUT",
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify(itemCreate)
@@ -124,7 +124,7 @@ function ItemPage () {
     }, []);
 
     useEffect(() => {
-        fetch(`http://localhost:8080/item/${id}`)
+        fetch(`/item/${id}`)
         .then(res => res.json())
         .then(data => setItem(data));
     }, [id]);

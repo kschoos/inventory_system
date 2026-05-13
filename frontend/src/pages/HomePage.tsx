@@ -19,15 +19,15 @@ function HomePage() {
   const [activeLocation, setActiveLocation] = useState<number>(0)
 
   function fetchAll() {
-    fetch("http://localhost:8080/item")
+    fetch("/item")
     .then(res => res.json())
     .then((i) => {console.log(i); setItems(i)});
 
-    fetch("http://localhost:8080/tag")
+    fetch("/tag")
     .then(res => res.json())
     .then((i) => {console.log(i); setTags(i)});
 
-    fetch("http://localhost:8080/location")
+    fetch("/location")
     .then(res => res.json())
     .then((i) => {console.log(i); setLocations(i)});
   }
@@ -52,14 +52,14 @@ function HomePage() {
   function createOptionTags(createdOption: String) {
     console.log(createdOption);
 
-    fetch("http://localhost:8080/tag?name="+createdOption, {
+    fetch("/tag?name="+createdOption, {
       method: "POST",
     })
     .then(fetchAll);
   }
 
   function search() {
-    const base_url = "http://localhost:8080/item";
+    const base_url = "/item";
     const name_param = "name="
     const tag_param = "tag_ids="
     const location_param = "location_id="
