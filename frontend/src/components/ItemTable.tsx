@@ -1,6 +1,12 @@
 import { Link } from "react-router-dom";
+import type { Item } from "../types/Item";
 
-export default function ItemTable({ items }) {
+interface ItemTableProps {
+  items: Item[];
+}
+
+
+export default function ItemTable({ items }: ItemTableProps) {
     return (
     <>
     <table className="table">

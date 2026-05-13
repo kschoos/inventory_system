@@ -5,10 +5,26 @@ stages:
 variables:
   GRADLE_USER_HOME: "$CI_PROJECT_DIR/.gradle"
 
-build:
+build_frontend:
+  stage: build
+  image: node:20
+  script:
+    - cd frontend
+    - npm ci
+    - npm run build
+  artifacts:
+    path:
+      - frontend/dist
+
+build_backend:
   stage: build
   image: gradle:9.4.1-jdk21
+  dependencies:
+    build_frontend
   script:
+    - mkdir -p src/main/resources/static
+    - rm -rf src/main/resources/static/*
+    - cp -r frontend/dist/* src/main/resources/static/
     - gradle clean build
   artifacts:
       paths:

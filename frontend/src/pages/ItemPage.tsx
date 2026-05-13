@@ -1,14 +1,19 @@
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import  CreatableSelect from 'react-select/creatable'
+import type { Item } from "../types/Item";
+import type { Location } from "../types/Location";
+import type { Tag } from "../types/Tag";
+import type { SelectItem } from "../types/SelectItem";
+import type { SingleValue } from "react-select";
 
 function ItemPage () {
     const { id } = useParams();
 
-    const [item, setItem] = useState(null);
+    const [item, setItem] = useState<Item | null>(null);
     const [isEditing, setEditing] = useState(false);
-    const [locations, setLocations] = useState([]);
-    const [tags, setTags] = useState([]);
+    const [locations, setLocations] = useState<Location[]>([]);
+    const [tags, setTags] = useState<Tag[]>([]);
 
     function fetchLocations() {
         fetch("http://localhost:8080/location")
@@ -23,70 +28,87 @@ function ItemPage () {
     }  
 
     function fetchItem() {
-        fetch(`http://localhost:8080/item/${item.id}`)
+        fetch(`http://localhost:8080/item/${item?.id}`)
         .then(res => res.json())
         .then(setItem);
     }
     
-    function createOptionTags(createdOption) {
+    function createOptionTags(createdOption: String) {
         fetch("http://localhost:8080/tag?name="+createdOption, {
           method: "POST",
         })
         .then(fetchTags);
     }
 
-    function createOptionLocations(createdOption) {
+    function createOptionLocations(createdOption: String) {
         fetch("http://localhost:8080/location?name="+createdOption, {
           method: "POST",
         })
         .then(fetchLocations);
     }
     
-    function changeLocation(location) {
-        setItem(prevItem => ({
-            ...prevItem,
-            location: {
-                id: location.value,
-                name: location.label
+    function changeLocation(location: SingleValue<SelectItem>) {
+        if (location === null) {
+            return;
+        }
+
+        setItem(prevItem => {
+            if (!prevItem) return null;
+
+            return {...prevItem,
+                location: {
+                    id: location?.value,
+                    name: location.label
+                }
             }
-        }))
+        })
     }
 
-    function changeTags(tags) {
-        setItem(prevItem => ({
-            ...prevItem,
-            tags: tags.map((tag) => {return {"id": tag.value, "name": tag.label}})
-        }))
+    function changeTags(tags: readonly SelectItem[]) {
+        setItem(prevItem => {
+            return prevItem ? {
+                ...prevItem,
+                tags: tags.map((tag) => {return {"id": tag.value, "name": tag.label}})
+            } : null;
+        })
     }
 
-    function changeCount(event) {
+    function changeCount(event: React.ChangeEvent<HTMLInputElement>) {
         const newCount = event.target.value;
         if (Number.isInteger(Number(newCount))) {
-            setItem(prevItem => ({
+            setItem(prevItem => ( prevItem ? {
                 ...prevItem,
-                count: newCount
-            }));
+                count: Number(newCount)
+            } : null));
         }
     }
 
-    function changeName(event) {
+    function changeName(event: React.ChangeEvent<HTMLInputElement>) {
         const newName = event.target.value;
 
-        setItem(prevItem => ({
+        setItem(prevItem => ( prevItem ? {
             ...prevItem,
             name: newName
-        }));
+        } : null));
     }
 
     function updateItem(){
+        if (item == null) {
+            return;
+        }
+
         const {
             location,
             tags,
-            ...itemCreate
+            ...rest
         } = item;
 
-        itemCreate.tagIds = item.tags?.map((tag) => tag.id);
-        itemCreate.locationId = item.location?.id;
+        const itemCreate = {
+            ...rest,
+            tagIds: item.tags?.map((tag) => tag.id),
+            locationId: item.location?.id
+        }
+
 
         fetch("http://localhost:8080/item", {
             method: "PUT",
@@ -147,7 +169,7 @@ function ItemPage () {
                                                      closeMenuOnSelect={false} 
                                                      onCreateOption={createOptionLocations}
                                                      onChange={changeLocation}
-                                                     options={locations.map((location) => {return {'value': location.id, 'label': location.name}})} 
+                                                     options={locations.map((location: Location) => {return {'value': location.id, 'label': location.name}})} 
                                                      placeholder="Select Location..."
                                                      defaultValue={{'value': item.location?.id, 'label': item.location?.name}}
                                     />
@@ -159,7 +181,7 @@ function ItemPage () {
                                 <span className="input-group-text">Count: </span>
                                 {
                                     isEditing ?
-                                    <input type="text" placeholder={item.count} onChange={changeCount} className="form-control text-end"></input>
+                                    <input type="text" placeholder={String(item.count)} onChange={changeCount} className="form-control text-end"></input>
                                     :
                                     <span className="form-control text-end">{item.count}</span>
                                 }

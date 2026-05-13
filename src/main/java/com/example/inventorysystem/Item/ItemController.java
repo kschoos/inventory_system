@@ -50,8 +50,8 @@ public class ItemController {
             @RequestParam(required = false) List<Long> tag_ids,
             @RequestParam(required = false) String name) {
 
-        // List<Item> found_items = itemService.findItems(location_id, tag_ids, name);
-        List<Item> found_items = itemJdbcRepository.findAll();
+        List<Item> found_items = itemService.findItems(location_id, tag_ids, name);
+        // List<Item> found_items = itemJdbcRepository.findAll();
 
         return ResponseEntity.ok(found_items);
     }

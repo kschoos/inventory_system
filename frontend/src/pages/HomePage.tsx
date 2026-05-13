@@ -1,17 +1,22 @@
 import { useState, useEffect } from 'react'
 import ItemTable from "../components/ItemTable";
 import Searchbar from "../components/Searchbar";
-import TagList from "../components/TagList";
-import  Select from 'react-select'
-import  CreatableSelect from 'react-select/creatable'
+import  Select from 'react-select';
+import  CreatableSelect from 'react-select/creatable';
+import type { SingleValue } from "react-select";
+
+import type { SelectItem } from "../types/SelectItem";
+import type { Location } from "../types/Location";
+import type { Tag } from "../types/Tag";
+import type { Item } from "../types/Item";
 
 function HomePage() {
-  const [items, setItems] = useState([])
-  const [tags, setTags] = useState([])
-  const [activeTags, setActiveTags] = useState([])
-  const [name, setName] = useState("")
-  const [locations, setLocations] = useState([])
-  const [activeLocation, setActiveLocation] = useState("")
+  const [items, setItems] = useState<Item[]>([])
+  const [tags, setTags] = useState<Tag[]>([])
+  const [activeTags, setActiveTags] = useState<number[]>([])
+  const [name, setName] = useState<String>("")
+  const [locations, setLocations] = useState<Location[]>([])
+  const [activeLocation, setActiveLocation] = useState<number>(0)
 
   function fetchAll() {
     fetch("http://localhost:8080/item")
@@ -32,25 +37,19 @@ function HomePage() {
   }, []);
 
 
-  function setActiveTagsWrap(arr) {
-    console.log(arr);
-    setActiveTags(arr);
-  }
-
-  function selectChangeLocation(activeItem) {
+  function selectChangeLocation(activeItem: SingleValue<SelectItem>) {
     if (activeItem === null) {
-      setActiveLocation(activeItem);
       return;
     }
 
     setActiveLocation(activeItem.value);
   }
 
-  function selectChangeTags(activeItems) {
+  function selectChangeTags(activeItems: readonly SelectItem[]) {
     setActiveTags(activeItems.map((item) => item.value));
   }
 
-  function createOptionTags(createdOption) {
+  function createOptionTags(createdOption: String) {
     console.log(createdOption);
 
     fetch("http://localhost:8080/tag?name="+createdOption, {
