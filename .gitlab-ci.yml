@@ -24,6 +24,7 @@ build_backend:
   script:
     - mkdir -p src/main/resources/static
     - rm -rf src/main/resources/static/*
+    - ls
     - cp -r frontend/dist/* src/main/resources/static/
     - gradle clean build
   artifacts:
