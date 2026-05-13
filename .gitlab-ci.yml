@@ -19,8 +19,9 @@ build_frontend:
 build_backend:
   stage: build
   image: gradle:9.4.1-jdk21
-  dependencies:
-    - build_frontend
+  needs:
+    - job: build_frontend
+      artifacts: true
   script:
     - mkdir -p src/main/resources/static
     - rm -rf src/main/resources/static/*
