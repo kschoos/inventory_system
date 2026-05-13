@@ -45,7 +45,7 @@ deploy:
   script:
     - mv build/libs/*-SNAPSHOT.jar build/libs/InventorySystem.jar
     - scp build/libs/InventorySystem.jar $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH
-    - ssh $DEPLOY_USER@$DEPLOY_HOST "pkill -u $DEPLOY_USER -f 'InventorySystem.jar' 2>/dev/null || true"
+    - ssh -v $DEPLOY_USER@$DEPLOY_HOST "pkill -f 'InventorySystem.jar' 2>/dev/null || true"
     - ssh $DEPLOY_USER@$DEPLOY_HOST "nohup java -jar '$DEPLOY_PATH/InventorySystem.jar' > '$DEPLOY_PATH/app.log' 2>&1 &"
   only:
     - main
