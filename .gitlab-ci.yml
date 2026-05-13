@@ -13,14 +13,14 @@ build_frontend:
     - npm ci
     - npm run build
   artifacts:
-    path:
+    paths:
       - frontend/dist
 
 build_backend:
   stage: build
   image: gradle:9.4.1-jdk21
   dependencies:
-    build_frontend
+    - build_frontend
   script:
     - mkdir -p src/main/resources/static
     - rm -rf src/main/resources/static/*
