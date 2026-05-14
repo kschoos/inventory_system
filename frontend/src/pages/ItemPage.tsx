@@ -16,32 +16,32 @@ function ItemPage () {
     const [tags, setTags] = useState<Tag[]>([]);
 
     function fetchLocations() {
-        fetch("/location")
+        fetch("/api/location")
         .then(res => res.json())
         .then((i) => {console.log(i); setLocations(i)});
     }
 
     function fetchTags() {
-        fetch("/tag")
+        fetch("/api/tag")
         .then(res => res.json())
         .then((i) => {console.log(i); setTags(i)});
     }  
 
     function fetchItem() {
-        fetch(`/item/${item?.id}`)
+        fetch(`/api/item/${item?.id}`)
         .then(res => res.json())
         .then(setItem);
     }
     
     function createOptionTags(createdOption: String) {
-        fetch("/tag?name="+createdOption, {
+        fetch("/api/tag?name="+createdOption, {
           method: "POST",
         })
         .then(fetchTags);
     }
 
     function createOptionLocations(createdOption: String) {
-        fetch("/location?name="+createdOption, {
+        fetch("/api/location?name="+createdOption, {
           method: "POST",
         })
         .then(fetchLocations);
@@ -110,7 +110,7 @@ function ItemPage () {
         }
 
 
-        fetch("/item", {
+        fetch("/api/item", {
             method: "PUT",
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify(itemCreate)
@@ -124,7 +124,7 @@ function ItemPage () {
     }, []);
 
     useEffect(() => {
-        fetch(`/item/${id}`)
+        fetch(`/api/item/${id}`)
         .then(res => res.json())
         .then(data => setItem(data));
     }, [id]);

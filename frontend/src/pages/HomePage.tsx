@@ -19,15 +19,15 @@ function HomePage() {
   const [activeLocation, setActiveLocation] = useState<number>(0)
 
   function fetchAll() {
-    fetch("/item")
+    fetch("/api/item")
     .then(res => res.json())
     .then((i) => {console.log(i); setItems(i)});
 
-    fetch("/tag")
+    fetch("/api/tag")
     .then(res => res.json())
     .then((i) => {console.log(i); setTags(i)});
 
-    fetch("/location")
+    fetch("/api/location")
     .then(res => res.json())
     .then((i) => {console.log(i); setLocations(i)});
   }
@@ -59,7 +59,7 @@ function HomePage() {
   }
 
   function search() {
-    const base_url = "/item";
+    const base_url = "/api/item";
     const name_param = "name="
     const tag_param = "tag_ids="
     const location_param = "location_id="
