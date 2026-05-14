@@ -16,7 +16,7 @@ function HomePage() {
   const [activeTags, setActiveTags] = useState<number[]>([])
   const [name, setName] = useState<String>("")
   const [locations, setLocations] = useState<Location[]>([])
-  const [activeLocation, setActiveLocation] = useState<number>(0)
+  const [activeLocation, setActiveLocation] = useState<number | null>(null)
 
   function fetchAll() {
     fetch("/api/item")
@@ -39,6 +39,7 @@ function HomePage() {
 
   function selectChangeLocation(activeItem: SingleValue<SelectItem>) {
     if (activeItem === null) {
+      setActiveLocation(null);
       return;
     }
 
